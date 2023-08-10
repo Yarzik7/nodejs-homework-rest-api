@@ -1,9 +1,9 @@
 const { httpError } = require('../helpers');
 
 /**
- *
- * @param {*} schema
- * @returns
+ * 
+ * @param {object} schema
+ * @returns {function}
  */
 const validateBody = schema => {
   const func = (req, res, next) => {
