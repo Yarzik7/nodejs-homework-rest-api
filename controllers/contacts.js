@@ -1,6 +1,5 @@
-const { listContacts, getContactById, removeContact, addContact, updateById } = require('../contacts');
-const { ctrlWrapper } = require('../helpers');
-const { operationById } = require('../helpers');
+const { listContacts, getContactById, removeContact, addContact, updateById } = require('../models/contacts');
+const { ctrlWrapper, operationById, httpError } = require('../helpers');
 
 const getAll = async (req, res) => {
   res.json(await listContacts());
@@ -19,6 +18,10 @@ const add = async (req, res) => {
 };
 
 const update = async (req, res) => {
+  if (!Object.keys(req.body).length) {
+    throw httpError(400, 'missing fields');
+  }
+  
   await operationById(req, res, updateById);
 };
 

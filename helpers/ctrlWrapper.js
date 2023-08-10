@@ -1,3 +1,8 @@
+/**
+ * Decorator. Returns a wrapper function for error handling 
+ * @param {function} controller 
+ * @returns {function}
+ */
 const ctrlWrapper = ctrl => {
   const func = async (req, res, next) => {
     try {
