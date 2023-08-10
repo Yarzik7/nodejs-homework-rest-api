@@ -1,7 +1,7 @@
 const { httpError } = require('../helpers');
 
 /**
- * 
+ * Returns a function for validating request body using a joi schema 
  * @param {object} schema
  * @returns {function}
  */
