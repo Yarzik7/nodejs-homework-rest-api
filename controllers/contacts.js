@@ -1,34 +1,44 @@
-const { listContacts, getContactById, removeContact, addContact, updateById } = require('../models/contacts');
-const { ctrlWrapper, operationById, httpError } = require('../helpers');
+const {
+  getAllContactsService,
+  getContactByIdService,
+  removeContactService,
+  addContactService,
+  updateByIdService,
+} = require('../services/contactsServices');
+const {
+  ctrlWrapper,
+  operationById,
+  Errors: { HttpError },
+} = require('../helpers');
 
-const getAll = async (req, res) => {
-  res.json(await listContacts());
+const getAllContactsController = async (req, res) => {
+  res.json(await getAllContactsService());
 };
 
-const getById = async (req, res) => {
-  await operationById(req, res, getContactById);
+const getContactByIdController = async (req, res) => {
+  await operationById(req, res, getContactByIdService);
 };
 
-const remove = async (req, res) => {
-  await operationById(req, res, removeContact);
+const removeContactController = async (req, res) => {
+  await operationById(req, res, removeContactService);
 };
 
-const add = async (req, res) => {
-  res.status(201).json(await addContact(req.body));
+const addContactController = async (req, res) => {
+  res.status(201).json(await addContactService(req.body));
 };
 
-const update = async (req, res) => {
+const updateContactController = async (req, res) => {
   if (!Object.keys(req.body).length) {
-    throw httpError(400, 'missing fields');
+    throw new HttpError(400, 'missing fields');
   }
-  
-  await operationById(req, res, updateById);
+
+  await operationById(req, res, updateByIdService);
 };
 
 module.exports = {
-  getAll: ctrlWrapper(getAll),
-  getById: ctrlWrapper(getById),
-  remove: ctrlWrapper(remove),
-  add: ctrlWrapper(add),
-  update: ctrlWrapper(update),
+  getAllContactsController: ctrlWrapper(getAllContactsController),
+  getContactByIdController: ctrlWrapper(getContactByIdController),
+  removeContactController: ctrlWrapper(removeContactController),
+  addContactController: ctrlWrapper(addContactController),
+  updateContactController: ctrlWrapper(updateContactController),
 };

@@ -1,21 +1,19 @@
-const { httpError } = require('../helpers');
+const { generateErrorByType } = require('../helpers');
 
 /**
- * Returns a function for validating request body using a joi schema 
+ * Returns a function for validating request body using a joi schema
  * @param {object} schema
  * @returns {function}
  */
 const validateBody = schema => {
-  const func = (req, res, next) => {
+  return (req, res, next) => {
     const { error } = schema.validate(req.body);
     if (error) {
-      next(httpError(400, `missing required ${error.details[0].path[0]} field`));
+      next(generateErrorByType(error));
     }
-
+  
     next();
   };
-
-  return func;
 };
 
 module.exports = validateBody;

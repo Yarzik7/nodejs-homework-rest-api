@@ -6,14 +6,14 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', ctrl.getAll);
+router.get('/', ctrl.getAllContactsController);
 
-router.get('/:id', ctrl.getById);
+router.get('/:id', ctrl.getContactByIdController);
 
-router.post('/', validateBody(addSchema), ctrl.add);
+router.post('/', validateBody(addSchema), ctrl.addContactController);
 
-router.put('/:id', validateBody(updateSchema), ctrl.update);
+router.put('/:id', validateBody(updateSchema), ctrl.updateContactController);
 
-router.delete('/:id', ctrl.remove);
+router.delete('/:id', ctrl.removeContactController);
 
 module.exports = router;

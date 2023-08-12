@@ -3,13 +3,13 @@ const { nanoid } = require('nanoid');
 const fs = require('fs/promises');
 const path = require('path');
 
-const contactsPath = path.join(__dirname, 'contacts.json');
+const contactsPath = path.join(__dirname, '../models/contacts.json');
 
 /**
  * Reads and returns an array of contacts from a file
  * @returns array
  */
-async function listContacts() {
+async function getAllContactsService() {
   const contacts = await fs.readFile(contactsPath);
   return JSON.parse(contacts);
 }
@@ -19,8 +19,8 @@ async function listContacts() {
  * @param {string} contactId
  * @returns object
  */
-async function getContactById(contactId) {
-  const contacts = await listContacts();
+async function getContactByIdService(contactId) {
+  const contacts = await getAllContactsService();
   const contactById = contacts.find(({ id }) => id === String(contactId));
   return contactById ?? null;
 }
@@ -30,8 +30,8 @@ async function getContactById(contactId) {
  * @param {string} contactId
  * @returns object
  */
-async function removeContact(contactId) {
-  const contacts = await listContacts();
+async function removeContactService(contactId) {
+  const contacts = await getAllContactsService();
   const contactIdx = contacts.findIndex(({ id }) => id === String(contactId));
   if (contactIdx === -1) {
     return null;
@@ -46,8 +46,8 @@ async function removeContact(contactId) {
  * @param {object} contact parameters object
  * @returns object
  */
-async function addContact({ name, email, phone }) {
-  const contacts = await listContacts();
+async function addContactService({ name, email, phone }) {
+  const contacts = await getAllContactsService();
   const newContact = { id: nanoid(), name, email, phone };
   contacts.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
@@ -60,8 +60,8 @@ async function addContact({ name, email, phone }) {
  * @param {object} data
  * @returns object
  */
-async function updateById(id, data) {
-  const contacts = await listContacts();
+async function updateByIdService(id, data) {
+  const contacts = await getAllContactsService();
   const contactIdx = contacts.findIndex(({ id: contactId }) => contactId === String(id));
   if (contactIdx === -1) {
     return null;
@@ -72,4 +72,10 @@ async function updateById(id, data) {
   return contacts[contactIdx];
 }
 
-module.exports = { listContacts, getContactById, removeContact, addContact, updateById };
+module.exports = {
+  getAllContactsService,
+  getContactByIdService,
+  removeContactService,
+  addContactService,
+  updateByIdService,
+};

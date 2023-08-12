@@ -1,9 +1,11 @@
-const httpError = require('./httpError');
+const Errors = require('./Errors');
+const generateErrorByType = require('./generateErrorByType')
 const ctrlWrapper = require('./ctrlWrapper');
 const operationById = require('./operationById');
 
 module.exports = {
-  httpError,
+  Errors,
+  generateErrorByType,
   ctrlWrapper,
   operationById,
 };
