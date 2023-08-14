@@ -1,10 +1,3 @@
-// const {
-//   getAllContactsService,
-//   getContactByIdService,
-//   removeContactService,
-//   addContactService,
-//   updateByIdService,
-// } = require('../services/contactsServices');
 const {
   ctrlWrapper,
   operationById,
@@ -32,18 +25,18 @@ const addContactController = async (req, res) => {
 
 const updateContactController = async (req, res) => {
   if (!Object.keys(req.body).length) {
-    throw new HttpError(400, 'missing fields');
+    throw new HttpError(422, 'missing fields');
   }
 
-  await operationById(req, res, findByIdAndUpdate.bind(Contact));
+  await operationById(req, res, findByIdAndUpdate.bind(Contact), req.body, { new: true });
 };
 
 const updateFavoriteContactController = async (req, res) => {
   if (!Object.keys(req.body).length) {
-    throw new HttpError(400, 'missing field favorite');
+    throw new HttpError(422, 'missing field favorite');
   }
 
-  await operationById(req, res, findByIdAndUpdate.bind(Contact));
+  await operationById(req, res, findByIdAndUpdate.bind(Contact), req.body, { new: true });
 };
 
 module.exports = {
