@@ -1,30 +1,33 @@
-const {
-  getAllContactsService,
-  getContactByIdService,
-  removeContactService,
-  addContactService,
-  updateByIdService,
-} = require('../services/contactsServices');
+// const {
+//   getAllContactsService,
+//   getContactByIdService,
+//   removeContactService,
+//   addContactService,
+//   updateByIdService,
+// } = require('../services/contactsServices');
 const {
   ctrlWrapper,
   operationById,
   Errors: { HttpError },
 } = require('../helpers');
 
+const { Contact } = require('../models/contacts');
+const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
+
 const getAllContactsController = async (req, res) => {
-  res.json(await getAllContactsService());
+  res.json(await Contact.find());
 };
 
 const getContactByIdController = async (req, res) => {
-  await operationById(req, res, getContactByIdService);
+  await operationById(req, res, findById.bind(Contact));
 };
 
 const removeContactController = async (req, res) => {
-  await operationById(req, res, removeContactService);
+  await operationById(req, res, findByIdAndRemove.bind(Contact));
 };
 
 const addContactController = async (req, res) => {
-  res.status(201).json(await addContactService(req.body));
+  res.status(201).json(await Contact.create(req.body));
 };
 
 const updateContactController = async (req, res) => {
@@ -32,7 +35,15 @@ const updateContactController = async (req, res) => {
     throw new HttpError(400, 'missing fields');
   }
 
-  await operationById(req, res, updateByIdService);
+  await operationById(req, res, findByIdAndUpdate.bind(Contact));
+};
+
+const updateFavoriteContactController = async (req, res) => {
+  if (!Object.keys(req.body).length) {
+    throw new HttpError(400, 'missing field favorite');
+  }
+
+  await operationById(req, res, findByIdAndUpdate.bind(Contact));
 };
 
 module.exports = {
@@ -41,4 +52,5 @@ module.exports = {
   removeContactController: ctrlWrapper(removeContactController),
   addContactController: ctrlWrapper(addContactController),
   updateContactController: ctrlWrapper(updateContactController),
+  updateFavoriteContactController: ctrlWrapper(updateFavoriteContactController),
 };

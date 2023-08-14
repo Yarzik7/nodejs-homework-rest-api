@@ -8,7 +8,7 @@ const {HttpError} = require('./Errors');
  */
 const operationById = async (req, res, operation) => {
   const { id } = req.params;
-  const result = await operation(id, req.body);
+  const result = await operation(id, req.body, {new: true});
 
   if (!result) {
     throw new HttpError(404, 'Not found');
