@@ -16,6 +16,6 @@ const updateSchema = Joi.object({
 
 const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
-}).max(1);
+});
 
 module.exports = { addSchema, updateSchema, updateFavoriteSchema };
