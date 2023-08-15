@@ -1,42 +1,35 @@
+const { ctrlWrapper } = require('../helpers');
+
 const {
-  ctrlWrapper,
-  operationById,
-  Errors: { HttpError },
-} = require('../helpers');
+  getAllContactsService,
+  getContactByIdService,
+  removeContactService,
+  addContactService,
+  updateByIdService,
+} = require('../services/contactsServices');
 
-const { Contact } = require('../models/contacts');
-const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
-
-const getAllContactsController = async (req, res) => {
-  res.json(await Contact.find());
+const getAllContactsController = async (_, res) => {
+  res.json(await getAllContactsService());
 };
 
 const getContactByIdController = async (req, res) => {
-  await operationById(req, res, findById.bind(Contact));
+  res.json(await getContactByIdService(req));
 };
 
 const removeContactController = async (req, res) => {
-  await operationById(req, res, findByIdAndRemove.bind(Contact));
+  res.json(await removeContactService(req));
 };
 
 const addContactController = async (req, res) => {
-  res.status(201).json(await Contact.create(req.body));
+  res.status(201).json(await addContactService(req.body));
 };
 
 const updateContactController = async (req, res) => {
-  if (!Object.keys(req.body).length) {
-    throw new HttpError(422, 'missing fields');
-  }
-
-  await operationById(req, res, findByIdAndUpdate.bind(Contact), req.body, { new: true });
+  res.json(await updateByIdService(req));
 };
 
 const updateFavoriteContactController = async (req, res) => {
-  if (!Object.keys(req.body).length) {
-    throw new HttpError(422, 'missing field favorite');
-  }
-
-  await operationById(req, res, findByIdAndUpdate.bind(Contact), req.body, { new: true });
+  res.json(await updateByIdService(req));
 };
 
 module.exports = {
