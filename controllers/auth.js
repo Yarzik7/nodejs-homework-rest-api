@@ -39,10 +39,26 @@ const loginController = async (req, res) => {
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
+  await User.findByIdAndUpdate(user._id, { token });
+
   res.json({ token });
+};
+
+const getCurrentController = async (req, res) => {
+  const { email, name } = req.user;
+  res.json({ email, name });
+};
+
+const logoutController = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: '' });
+
+  res.json({ message: 'Logout succes' });
 };
 
 module.exports = {
   registerController: ctrlWrapper(registerController),
   loginController: ctrlWrapper(loginController),
+  getCurrentController: ctrlWrapper(getCurrentController),
+  logoutController: ctrlWrapper(logoutController),
 };

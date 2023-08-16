@@ -8,8 +8,11 @@ const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
  * Gets contacts array from the database and returns it
  * @returns array
  */
-async function getAllContactsService() {
-  return await Contact.find();
+async function getAllContactsService(req) {
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+  return await Contact.find({owner}, "-createdAt -updateAt", {skip, limit});
 }
 
 /**

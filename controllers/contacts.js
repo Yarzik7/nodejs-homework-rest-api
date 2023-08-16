@@ -8,8 +8,9 @@ const {
   updateByIdService,
 } = require('../services/contactsServices');
 
-const getAllContactsController = async (_, res) => {
-  res.json(await getAllContactsService());
+const getAllContactsController = async (req, res) => {
+  
+  res.json(await getAllContactsService(req));
 };
 
 const getContactByIdController = async (req, res) => {
@@ -21,7 +22,8 @@ const removeContactController = async (req, res) => {
 };
 
 const addContactController = async (req, res) => {
-  res.status(201).json(await addContactService(req.body));
+  const { _id: owner } = req.user;
+  res.status(201).json(await addContactService({ ...req.body, owner }));
 };
 
 const updateContactController = async (req, res) => {
