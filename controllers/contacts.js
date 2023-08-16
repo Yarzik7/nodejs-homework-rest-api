@@ -1,3 +1,5 @@
+const { ctrlWrapper } = require('../helpers');
+
 const {
   getAllContactsService,
   getContactByIdService,
@@ -5,22 +7,17 @@ const {
   addContactService,
   updateByIdService,
 } = require('../services/contactsServices');
-const {
-  ctrlWrapper,
-  operationById,
-  Errors: { HttpError },
-} = require('../helpers');
 
-const getAllContactsController = async (req, res) => {
+const getAllContactsController = async (_, res) => {
   res.json(await getAllContactsService());
 };
 
 const getContactByIdController = async (req, res) => {
-  await operationById(req, res, getContactByIdService);
+  res.json(await getContactByIdService(req));
 };
 
 const removeContactController = async (req, res) => {
-  await operationById(req, res, removeContactService);
+  res.json(await removeContactService(req));
 };
 
 const addContactController = async (req, res) => {
@@ -28,11 +25,11 @@ const addContactController = async (req, res) => {
 };
 
 const updateContactController = async (req, res) => {
-  if (!Object.keys(req.body).length) {
-    throw new HttpError(400, 'missing fields');
-  }
+  res.json(await updateByIdService(req));
+};
 
-  await operationById(req, res, updateByIdService);
+const updateFavoriteContactController = async (req, res) => {
+  res.json(await updateByIdService(req));
 };
 
 module.exports = {
@@ -41,4 +38,5 @@ module.exports = {
   removeContactController: ctrlWrapper(removeContactController),
   addContactController: ctrlWrapper(addContactController),
   updateContactController: ctrlWrapper(updateContactController),
+  updateFavoriteContactController: ctrlWrapper(updateFavoriteContactController),
 };

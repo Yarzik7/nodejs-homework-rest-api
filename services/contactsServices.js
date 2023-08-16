@@ -1,75 +1,51 @@
-const { nanoid } = require('nanoid');
+const {operationById} = require('../helpers');
 
-const fs = require('fs/promises');
-const path = require('path');
+const { Contact } = require('../models/contacts');
+const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
 
-const contactsPath = path.join(__dirname, '../models/contacts.json');
 
 /**
- * Reads and returns an array of contacts from a file
+ * Gets contacts array from the database and returns it
  * @returns array
  */
 async function getAllContactsService() {
-  const contacts = await fs.readFile(contactsPath);
-  return JSON.parse(contacts);
+  return await Contact.find();
 }
 
 /**
- * Finds a contact object by id and returns it
- * @param {string} contactId
+ * Gets a contact object by id from the database and returns it
+ * @param {object} req
  * @returns object
  */
-async function getContactByIdService(contactId) {
-  const contacts = await getAllContactsService();
-  const contactById = contacts.find(({ id }) => id === String(contactId));
-  return contactById ?? null;
+async function getContactByIdService(req) {
+  return await operationById(req, findById.bind(Contact));
 }
 
 /**
- * Deletes a contact by id and returns it
- * @param {string} contactId
+ * Deletes a contact by id from the database and returns it
+ * @param {object} req
  * @returns object
  */
-async function removeContactService(contactId) {
-  const contacts = await getAllContactsService();
-  const contactIdx = contacts.findIndex(({ id }) => id === String(contactId));
-  if (contactIdx === -1) {
-    return null;
-  }
-  const [contact] = contacts.splice(contactIdx, 1);
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return { message: 'contact deleted', contact };
+async function removeContactService(req) {
+  return await operationById(req, findByIdAndRemove.bind(Contact));
 }
 
 /**
- * Creates and adds a contact to an array and returns it
- * @param {object} contact parameters object
+ * Adds a contact to the database and returns it
+ * @param {object} body of request
  * @returns object
  */
-async function addContactService({ name, email, phone }) {
-  const contacts = await getAllContactsService();
-  const newContact = { id: nanoid(), name, email, phone };
-  contacts.push(newContact);
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return newContact;
+async function addContactService(body) {
+  return Contact.create(body);
 }
 
 /**
  * Updates contact information returns a contact object with updated information
- * @param {string} contactId
- * @param {object} data
+ * @param {object} req
  * @returns object
  */
-async function updateByIdService(id, data) {
-  const contacts = await getAllContactsService();
-  const contactIdx = contacts.findIndex(({ id: contactId }) => contactId === String(id));
-  if (contactIdx === -1) {
-    return null;
-  }
-  const contactData = { ...contacts[contactIdx], ...data };
-  contacts[contactIdx] = { ...contactData, id };
-  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-  return contacts[contactIdx];
+async function updateByIdService(req) {
+  return await operationById(req, await findByIdAndUpdate.bind(Contact), req.body, { new: true });
 }
 
 module.exports = {
