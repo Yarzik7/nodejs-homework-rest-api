@@ -3,26 +3,23 @@ const { handleMongooseError } = require('../helpers');
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    password: {
-      type: String,
-      minlength: 6,
-      required: true,
-    },
-    token: {
-      type: String,
-      default: '',
-    },
+  password: {
+    type: String,
+    required: [true, 'Set password for user'],
   },
-  { versionKey: false, timestamp: true }
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+  },
+  subscription: {
+    type: String,
+    enum: ["starter", "pro", "business"],
+    default: "starter"
+  },
+  token: String
+},
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.post('save', handleMongooseError);
