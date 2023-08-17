@@ -9,9 +9,10 @@ const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
  */
 async function getAllContactsService(req) {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, ...args } = req.query;
+  
   const skip = (page - 1) * limit;
-  return await Contact.find({ owner }, '-createdAt -updateAt', { skip, limit });
+  return await Contact.find({ owner, ...args}, '-createdAt -updateAt', {skip, limit});
 }
 
 /**

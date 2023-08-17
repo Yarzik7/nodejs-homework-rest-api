@@ -18,7 +18,7 @@ router.get('/', authenticate, getAllContactsController);
 
 router.get('/:id', authenticate, isValidId, getContactByIdController);
 
-router.post('/', authenticate,validateBody(addSchema), addContactController);
+router.post('/', authenticate, validateBody(addSchema), addContactController);
 
 router.put('/:id', authenticate,isValidId, validateBody(updateSchema), updateContactController);
 
