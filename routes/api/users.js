@@ -3,7 +3,7 @@ const { validateBody, authenticate } = require('../../middlewares');
 const {
   registerSchema,
   loginSchema,
-  upadateSubscriptionUser,
+  upadateSubscriptionSchema,
 } = require('../../utils/validation/userValidationSchemas');
 const {
   registerController,
@@ -15,7 +15,7 @@ const {
 
 const router = express.Router();
 
-router.patch('/', authenticate, validateBody(upadateSubscriptionUser), upadateSubscriptionController);
+router.patch('/', authenticate, validateBody(upadateSubscriptionSchema), upadateSubscriptionController);
 router.post('/register', validateBody(registerSchema), registerController);
 router.post('/login', validateBody(loginSchema), loginController);
 router.get('/current', authenticate, getCurrentController);
