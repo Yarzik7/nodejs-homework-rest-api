@@ -1,15 +1,18 @@
-const {operationById} = require('../helpers');
+const { operationById } = require('../helpers');
 
 const { Contact } = require('../models/contacts');
 const { findById, findByIdAndRemove, findByIdAndUpdate } = Contact;
-
 
 /**
  * Gets contacts array from the database and returns it
  * @returns array
  */
-async function getAllContactsService() {
-  return await Contact.find();
+async function getAllContactsService(req) {
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10, ...fields } = req.query;
+  
+  const skip = (page - 1) * limit;
+  return await Contact.find({ ...fields, owner }, "",{ skip, limit });
 }
 
 /**
@@ -32,11 +35,12 @@ async function removeContactService(req) {
 
 /**
  * Adds a contact to the database and returns it
- * @param {object} body of request
+ * @param {object} req
  * @returns object
  */
-async function addContactService(body) {
-  return Contact.create(body);
+async function addContactService(req) {
+  const { _id: owner } = req.user;
+  return Contact.create({ ...req.body, owner });
 }
 
 /**
