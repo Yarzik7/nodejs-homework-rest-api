@@ -3,6 +3,7 @@ const ctrlWrapper = require('./ctrlWrapper');
 const operationById = require('./operationById');
 const handleMongooseError = require('./handleMongooseError');
 const processingImgByJimp = require('./processingImgByJimp')
+const getVerifyEmail = require('./getVerifyEmail')
 
 module.exports = {
   Errors,
@@ -10,4 +11,5 @@ module.exports = {
   operationById,
   handleMongooseError,
   processingImgByJimp,
+  getVerifyEmail
 };
